@@ -1,403 +1,217 @@
-🌟 Live Demo
+🌟 Eventify – MERN Stack Event Management Application
+
+Eventify is a full-stack event management platform built using the MERN stack.
+It enables users to create, discover, and RSVP to events with real-time capacity tracking, secure authentication, and a responsive user interface.
+
+🔗 Live Demo
 
 Frontend: https://eventify-app.vercel.app
 
 Backend API: https://eventify-api.onrender.com
 
+API Health Check: https://eventify-api.onrender.com/health
+
 📋 Features
-✅ Core Features Implemented
-User Authentication: Secure registration, login, and session management using JWT tokens
+✅ Core Features
 
-Event Management: Create, read, update, and delete events with image uploads
+User Authentication
 
-RSVP System: Join/leave events with real-time capacity tracking
+Secure registration and login using JWT
 
-Event Discovery: Search, filter, and sort events by category, date, and location
+Session management
 
-Responsive Design: Mobile-first responsive UI built with Tailwind CSS
+Event Management
 
-Real-time Updates: Instant UI updates without page refresh
+Create, read, update, and delete events
 
-Image Uploads: Cloudinary integration for event images
+Event image uploads using Cloudinary
 
-✅ Advanced Features
-Concurrency-safe RSVP: MongoDB transactions prevent double-booking and race conditions
+RSVP System
 
-Capacity Management: Real-time tracking of available spots
+Join and leave events
 
-Event Categories: Music, Sports, Conference, Workshop, Festival, and more
+Real-time capacity tracking
 
-User Profiles: Personalized event dashboards
+Event Discovery
 
-Pagination: Efficient loading for large event lists
+Search, filter, and sort events by:
 
-Form Validation: Client and server-side validation
+Category
 
-Toast Notifications: User-friendly feedback system
+Date
+
+Location
+
+Responsive Design
+
+Mobile-first UI using Tailwind CSS
+
+Real-time UI Updates
+
+Instant updates without page refresh
+
+🚀 Advanced Features
+
+Concurrency-safe RSVP system
+
+MongoDB transactions prevent race conditions and overbooking
+
+Capacity Management
+
+Accurate real-time attendee tracking
+
+Event Categories
+
+Music, Sports, Conference, Workshop, Festival, and more
+
+User Profiles
+
+Personalized event dashboards
+
+Pagination
+
+Efficient handling of large event lists
+
+Form Validation
+
+Client-side and server-side validation
+
+Toast Notifications
+
+User-friendly feedback system
 
 🏗️ Tech Stack
 Frontend
-React 18 - UI library
 
-React Router 6 - Client-side routing
+React 18
 
-Tailwind CSS - Utility-first CSS framework
+React Router 6
 
-React Icons - Icon library
+Tailwind CSS
 
-Axios - HTTP client
+React Icons
 
-React Hot Toast - Notification system
+Axios
 
-Context API - State management
+React Hot Toast
+
+Context API
 
 Backend
-Node.js - Runtime environment
 
-Express.js - Web framework
+Node.js
 
-MongoDB - NoSQL database
+Express.js
 
-Mongoose - ODM for MongoDB
+MongoDB
 
-JWT - Authentication tokens
+Mongoose
 
-Multer - File upload handling
+JWT (Authentication)
 
-Cloudinary - Cloud image storage
+Multer (File uploads)
 
-Bcrypt - Password hashing
+Cloudinary (Image storage)
 
-CORS - Cross-origin resource sharing
+Bcrypt (Password hashing)
 
-🚀 Local Setup
-Prerequisites
-Node.js (v16 or higher)
+CORS
 
-MongoDB (local installation or MongoDB Atlas account)
+🛠️ Technical Highlight: Concurrency-safe RSVP System
+Problem
 
-npm or yarn package manager
+When multiple users attempt to RSVP simultaneously:
 
-1. Clone the Repository
-bash
-git clone https://github.com/yourusername/eventify.git
-cd eventify
-2. Backend Setup
-bash
-# Navigate to backend directory
-cd backend
+Event capacity may be exceeded
 
-# Install dependencies
-npm install
+Duplicate RSVPs may occur
 
-# Create environment variables file
-cp .env.example .env
+Data inconsistency can happen
 
-# Edit .env file with your configuration
-nano .env
-Environment Variables (.env)
-env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/eventify
-# or for MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/eventify
+✅ Solution: MongoDB Transactions
+Key Techniques
 
-JWT_SECRET=your_super_secret_jwt_key_here
-JWT_EXPIRE=7d
+MongoDB sessions & transactions
 
-# Cloudinary (for image uploads)
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+Atomic capacity validation
 
-# Frontend URL for CORS
-FRONTEND_URL=http://localhost:5173
-3. Frontend Setup
-bash
-# Navigate to frontend directory
-cd ../frontend
+Unique compound index on (userId, eventId)
 
-# Install dependencies
-npm install
+Automatic rollback on failure
 
-# Create environment variables file
-cp .env.example .env
-
-# Edit .env file
-nano .env
-Environment Variables (.env)
-env
-VITE_BACKEND_URL=http://localhost:5000
-4. Database Setup
-bash
-# Make sure MongoDB is running
-# For local MongoDB:
-mongod
-
-# For MongoDB Atlas, ensure your connection string is correct in .env
-5. Running the Application
-Option A: Run Both Services Separately
-Terminal 1 - Backend:
-
-bash
-cd backend
-npm run dev
-# Server runs on http://localhost:5000
-Terminal 2 - Frontend:
-
-bash
-cd frontend
-npm run dev
-# App runs on http://localhost:5173
-Option B: Using Concurrently (Recommended)
-bash
-# From root directory
-npm install -g concurrently
-
-# Add to package.json in root:
-{
-  "scripts": {
-    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\""
-  }
-}
-
-# Then run:
-npm run dev
-6. Access the Application
-Frontend: http://localhost:5173
-
-Backend API: http://localhost:5000
-
-API Health Check: http://localhost:5000/health
-
-🛠️ Technical Implementation
-RSVP Capacity and Concurrency Challenge
-Problem Statement
-When multiple users try to RSVP to an event simultaneously, we face two critical challenges:
-
-Race Conditions: Two users might see available capacity and RSVP at the same time, exceeding the limit
-
-Double Booking: A user might RSVP multiple times to the same event
-
-Data Consistency: Attendee count might not match actual RSVPs
-
-Solution Strategy: MongoDB Transactions
-Database Schema:
-
-javascript
-// Event Model
-const eventSchema = new mongoose.Schema({
-  title: String,
-  capacity: Number,
-  attendeesCount: { type: Number, default: 0 }
-});
-
-// RSVP Model (prevents duplicate RSVPs)
-const rsvpSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  eventId: { type: mongoose.Schema.Types.ObjectId, ref: "Event" }
-}, { timestamps: true });
-
-// Unique compound index prevents duplicate RSVPs
+RSVP Schema (Duplicate Prevention)
 rsvpSchema.index({ userId: 1, eventId: 1 }, { unique: true });
-Concurrency-safe RSVP Implementation
-Key Code Implementation (rsvp.controller.js):
 
-javascript
-export const rsvpEvent = async (req, res) => {
-  const session = await mongoose.startSession();
-  
-  try {
-    session.startTransaction();
-    
-    const userId = req.user._id;
-    const eventId = req.params.eventId;
-    
-    // 1. Check event exists within transaction
-    const event = await Event.findById(eventId).session(session);
-    if (!event) {
-      await session.abortTransaction();
-      return res.status(404).json({ message: "Event not found" });
-    }
-    
-    // 2. Check capacity within transaction (atomic read)
-    if (event.attendeesCount >= event.capacity) {
-      await session.abortTransaction();
-      return res.status(400).json({ message: "Event is full" });
-    }
-    
-    // 3. Check for duplicate RSVP within transaction
-    const existing = await RSVP.findOne({ userId, eventId }).session(session);
-    if (existing) {
-      await session.abortTransaction();
-      return res.status(400).json({ message: "Already RSVP'd" });
-    }
-    
-    // 4. Create RSVP and update count atomically
-    await RSVP.create([{ userId, eventId }], { session });
-    
-    // 5. Increment attendees count (atomic operation)
-    event.attendeesCount += 1;
-    await event.save({ session });
-    
-    // 6. Commit transaction
-    await session.commitTransaction();
-    session.endSession();
-    
-    return res.status(201).json({
-      success: true,
-      message: "RSVP successful",
-      attendeesCount: event.attendeesCount
-    });
-    
-  } catch (error) {
-    // 7. Rollback on any error
-    await session.abortTransaction();
-    session.endSession();
-    
-    // Handle duplicate key error (unique index violation)
-    if (error.code === 11000) {
-      return res.status(400).json({
-        success: false,
-        message: "Duplicate RSVP detected"
-      });
-    }
-    
-    return res.status(500).json({ success: false, message: error.message });
-  }
-};
-Why This Solution Works:
-Atomic Operations: MongoDB transactions ensure all operations succeed or fail together
+Why This Approach Works
 
-Isolation Level: Serializable isolation prevents dirty reads and phantom reads
+Atomic Operations: Ensures all steps succeed or fail together
 
-Unique Constraints: Compound index prevents duplicate RSVPs at database level
+Strong Consistency: Prevents race conditions
 
-Capacity Validation: Check happens within transaction, ensuring real-time accuracy
+Database-level Protection: Unique index blocks duplicates
 
-Rollback Safety: Any error triggers complete rollback, maintaining data consistency
+Rollback Safety: Errors revert all changes
 
-Alternative Solutions Considered:
-Optimistic Concurrency Control:
-
-Version field with $inc operator
-
-Retry logic on version mismatch
-
-Pros: Better performance for high contention
-
-Cons: More complex implementation
-
-Pessimistic Locking:
-
-Document-level locks
-
-Pros: Simple to understand
-
-Cons: Poor performance, not native in MongoDB
-
-Application-level Queues:
-
-Process RSVPs sequentially
-
-Pros: Complete control
-
-Cons: Single point of failure, complex
-
-Performance Considerations:
-Index Optimization: Compound index on (userId, eventId) for fast duplicate checks
-
-Read Preference: Primary reads for strong consistency
-
-Write Concern: Majority write concern for data durability
-
-Session Management: Proper session cleanup to prevent memory leaks
-
-📁 Project Structure
-text
-eventify/
-├── backend/
-│   ├── controllers/
-│   │   ├── auth.controller.js
-│   │   ├── event.controller.js
-│   │   └── rsvp.controller.js
-│   ├── middleware/
-│   │   └── auth.middleware.js
-│   ├── models/
-│   │   ├── user.model.js
-│   │   ├── event.model.js
-│   │   └── rsvp.model.js
-│   ├── routes/
-│   │   ├── auth.routes.js
-│   │   ├── event.routes.js
-│   │   └── rsvp.routes.js
-│   ├── config/
-│   │   └── cloudinary.config.js
-│   ├── .env
-│   ├── package.json
-│   └── server.js
-│
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── ProtectedRoute.jsx
-│   │   │   └── EventCard.jsx
-│   │   ├── context/
-│   │   │   └── AppContext.jsx
-│   │   ├── pages/
-│   │   │   ├── auth/
-│   │   │   │   ├── Login.jsx
-│   │   │   │   └── Register.jsx
-│   │   │   ├── events/
-│   │   │   │   ├── Events.jsx
-│   │   │   │   ├── CreateEvent.jsx
-│   │   │   │   ├── EditEvent.jsx
-│   │   │   │   └── EventDetails.jsx
-│   │   │   └── Home.jsx
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   └── index.css
-│   ├── .env
-│   ├── package.json
-│   ├── index.html
-│   └── vite.config.js
-│
-└── README.md
 🔧 API Endpoints
 Authentication
-POST /api/auth/register - Register new user
 
-POST /api/auth/login - Login user
+POST /api/auth/register – Register new user
 
-POST /api/auth/logout - Logout user
+POST /api/auth/login – Login user
 
-GET /api/auth/is-auth - Check authentication status
+POST /api/auth/logout – Logout user
+
+GET /api/auth/is-auth – Check authentication status
 
 Events
-GET /api/events - Get all events (with filters)
 
-GET /api/events/:id - Get single event
+GET /api/events – Get all events (filters supported)
 
-POST /api/events - Create new event
+GET /api/events/:id – Get single event
 
-PUT /api/events/:id - Update event
+POST /api/events – Create new event
 
-DELETE /api/events/:id - Delete event
+PUT /api/events/:id – Update event
 
-GET /api/events/:id/attendees - Get event attendees
-
-GET /api/events/:id/likes - Get event likes
-
-POST /api/events/:id/like - Like/unlike event
+DELETE /api/events/:id – Delete event
 
 RSVP
 
-POST /api/rsvp/:eventId - RSVP to event
+POST /api/rsvp/:eventId – RSVP to event
 
-DELETE /api/rsvp/:eventId - Cancel RSVP
+DELETE /api/rsvp/:eventId – Cancel RSVP
 
-GET /api/rsvp/check/:eventId - Check RSVP status
+GET /api/rsvp/check/:eventId – Check RSVP status
 
-GET /api/rsvp/user/my-rsvps - Get user's RSVPs
+GET /api/rsvp/user/my-rsvps – Get user RSVPs
+
+📁 Project Structure
+eventify/
+├── backend/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── config/
+│   └── server.js
+│
+├── frontend/
+│   ├── components/
+│   ├── context/
+│   ├── pages/
+│   ├── App.jsx
+│   └── main.jsx
+│
+└── README.md
+
+📌 Summary
+
+Eventify demonstrates real-world MERN stack development, with a strong focus on:
+
+Secure authentication
+
+Concurrency-safe backend logic
+
+Clean frontend architecture
+
+Scalable and maintainable design
