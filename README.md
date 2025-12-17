@@ -218,3 +218,27 @@ Concurrency-safe backend logic
 Clean frontend architecture
 
 Scalable and maintainable design
+
+
+
+🧪 Test Credentials
+
+Use the following test accounts to explore the application features such as event creation, RSVP, and user dashboards.
+
+🔐 Test User 1
+
+Email: test1@gmail.com
+
+Password: Test@123
+
+🔐 Test User 2
+
+Email: test2@gmail.com
+
+Password: Test@123
+
+🔐 Test User 3
+
+Email: test3@gmail.com
+
+Password: Test@123
