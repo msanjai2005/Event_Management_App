@@ -3,13 +3,7 @@
 Eventify is a full-stack event management platform built using the MERN stack.
 It enables users to create, discover, and RSVP to events with real-time capacity tracking, secure authentication, and a responsive user interface.
 
-🔗 Live Demo
-
-Frontend: https://eventify-app.vercel.app
-
-Backend API: https://eventify-api.onrender.com
-
-API Health Check: https://eventify-api.onrender.com/health
+🔗 Live Demo Link : https://event-management-app-blue.vercel.app
 
 📋 Features
 ✅ Core Features
