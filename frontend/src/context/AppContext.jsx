@@ -9,7 +9,7 @@ import React, {
 export const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
-  const backendurl = "http://localhost:3000";
+  const backendurl = "https://event-management-app-48ad.onrender.com";
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
