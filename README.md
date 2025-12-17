@@ -7,7 +7,6 @@
 
 
 
-
 🌟 Eventify – MERN Stack Event Management Application
 
 Eventify is a full-stack event management platform built using the MERN stack.
